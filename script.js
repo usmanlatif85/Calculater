@@ -1,36 +1,52 @@
-class Car{
-    name;
-    model;
-    color;
-    constructor(name, model, color){
-        this.name = name;
-        this.model = model;
-        this.color = color;
-    }
-    getCarInfo(){
-        return `Car name: ${this.name}, model: ${this.model}, color: ${this.color}`;
-    }
+let input = document.getElementById("input");
+let buttons = document.querySelectorAll("button");
 
-}
-let car1 = new Car("Toyota", "Corolla", "Red");
-console.log(car1.getCarInfo());
-class ElectricCar extends Car{
-    batteryCapacity;
-    constructor(name, model, color, batteryCapacity){
-        super(name, model, color);
-        this.batteryCapacity = batteryCapacity;
-    }
-    getElectricCarInfo(){
-        return `${super.getCarInfo()}, battery capacity: ${this.batteryCapacity} kWh`;
-    }
-}
-let electricCar1 = new ElectricCar("Tesla", "Model 3", "Blue", 75);
-console.log(electricCar1.getElectricCarInfo());
-const add = (...args) => {
-    return args
-}
-console.log(add(1, 2, 3, 4, 5));
+let expression = "";
 
-    
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        let value = button.innerText;
 
+        //AC
+        if (value === "AC") {
+            expression = "";
+            input.value = "";
+        }
 
+        // Delete
+        else if (value === "Del") {
+            expression = expression.slice(0, -1);
+            input.value = expression;
+        }
+
+        // Equal
+        else if (value === "=") {
+            try {
+                expression = eval(
+                    expression
+                        .replace(/×/g, "*")
+                        .replace(/÷/g, "/")
+                ).toString();
+
+                input.value = expression;
+            } catch {
+                input.value = "Error";
+                expression = "";
+            }
+        }
+
+        // Plus/Minus
+        else if (value === "+/-") {
+            if (expression) {
+                expression = (-Number(expression)).toString();
+                input.value = expression;
+            }
+        }
+
+        // Normal buttons
+        else {
+            expression += value;
+            input.value = expression;
+        }
+    });
+});
